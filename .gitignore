@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+*.pptx
+*.ppt
+*.psd
+*.ttf
+*.otf
+*.ttc
+*.zip
+audit.json
+private-assets/
+.env
+.env.*

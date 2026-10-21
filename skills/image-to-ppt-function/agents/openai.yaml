@@ -1,0 +1,7 @@
+interface:
+  display_name: "图片转ppt功能"
+  short_description: "将图片重建为小组件可独立编辑并精确匹配字体字重的高保真PPT"
+  default_prompt: "使用 $image-to-ppt-function 转换图片：各个小组件独立可拖动编辑，逐项匹配字体、字重和加粗，缺少字体时从可靠来源下载并验证。"
+
+policy:
+  allow_implicit_invocation: true
