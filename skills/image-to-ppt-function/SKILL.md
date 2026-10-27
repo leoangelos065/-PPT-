@@ -32,12 +32,12 @@ Use this when the user says “可编辑”, “一模一样”, “一比一”
 3. Build only the modules needed for the specific image. Use native objects for simple structure and independent image assets for complex visuals.
 4. Perform the font-matching procedure below before final typography. Do not apply a universal Chinese or Latin fallback to the entire slide.
 5. Avoid automatic wrapping for single-line labels. Widen the text box first, then tune font size and position. Use explicit line breaks only when the reference has them.
-6. Render the actual PPTX with PowerPoint when available, not just a library preview. Compare the exported PNG with the source and inspect the side-by-side and heatmap. Iterate on typography, wrapping, and local text-removal artifacts first.
+6. Render the actual PPTX in the user's target presentation app (such as PowerPoint or WPS) when available. Compare the exported PNG with the source at matching scale; inspect the side-by-side and use overlays or heatmaps where useful. Iterate on typography, wrapping, and local text-removal artifacts first. A library preview does not establish the app's actual appearance.
 7. Run the bundled `scripts/audit_pptx.py` before delivery. Inspect its component/font inventory and resolve reported structural issues; use actual-render visual checks for text overflow, wrapping, geometry, palette and damaged media. A structural pass alone is not visual acceptance.
 
 ### Refining an existing PPT against its source image
 
-- Preserve a task-specific copy of the starting PPTX and the original image. Render the current slide in the target presentation app, then compare at matching scale and alignment. Treat the image as the visual reference and the existing deck as the source of wording unless the user asks for text changes.
+- Preserve the original image and a task-specific snapshot of the starting PPTX during refinement. When the user asks to reproduce or correct against the original image, that image governs both wording and appearance. Transcribe it directly; use the existing deck only as an editable starting point or asset donor. Reuse photographs or icons only after confirming they match the image. Preserve wording that the user explicitly requested to change, and record those intentional differences instead of silently adopting a prior deck's text.
 - Make a short, region-by-region discrepancy list before editing: font family and weight, line spacing and wrapping, card bounds and gaps, badges and check marks, colors, and stray formatting. Measure card edges before moving them; leave geometry that already aligns alone and make the smallest visible correction.
 - Inspect paragraph-level formatting as well as font runs. Check inherited bullets or numbering, hanging indents, paragraph and line spacing, trailing empty paragraphs, text highlight or shading, and placeholder/theme defaults. These can create visible mismatches even when the selected font is correct.
 - After each focused edit, render the PPTX again in the target app and compare the same regions. Finish with a labeled side-by-side image at the same scale, then run the structural audit. Report the visual result and audit result separately.
@@ -50,6 +50,7 @@ Use this when the user says “可编辑”, “一模一样”, “一比一”
 - If a promising or identified font is missing, search and download it autonomously from its official vendor, author repository, Google Fonts, or another legitimate distribution. Obtain the needed weight files and verify the family/style metadata, license, and file integrity. Use task-local downloads and per-user installation where needed; do not buy fonts, bypass licensing, or run untrusted installers. If a proprietary original cannot legally be obtained, report that limitation and identify any substitute explicitly.
 - Reopen PowerPoint after font installation and verify that the requested face is actually rendered without font substitution. Set explicit East Asian and Latin typefaces in the PPTX. Embed fonts when supported and their embedding rights allow it; otherwise disclose the font dependency and retain lawful font files/source information with build assets.
 - Compare tightly bounded text crops using glyph silhouettes/edges and foreground masks, with consistent alignment and resolution. Tune size, spacing, line breaks, and coordinates after family/weight matching. Whole-slide pixel averages are dominated by backgrounds and cannot by themselves identify a font or prove a match. Reject changes that lower an average while visibly worsening text.
+- Calibrate visible text width and height independently. A line can have the correct width while its glyphs are too short. After confirming family and real weight, try font size and character spacing together to match both dimensions, then correct the baseline/position. Validate the resulting glyph shapes and inter-character gaps in the actual app; do not force a bounding-box match with colliding letters, excessive tracking, or unverified nonuniform stretching. Keep the text normally editable.
 
 ## Component and typography acceptance
 
@@ -89,7 +90,7 @@ When the user requests ongoing self-improvement of this skill, use demonstrated 
 - Never claim pixel-perfect identity for independently rendered text unless it has been verified. Raster originals do not expose their font metadata or anti-aliasing settings.
 - State any remaining limitation only when it materially affects use. Typical residuals are font rasterization and complex icon internals.
 - If the user permits it, use a source crop for a complex icon that cannot be recreated faithfully; tell them that only that icon is not independently editable.
-- Do not delete prior deliverables unless the user explicitly asks.
+- Do not delete prior deliverables unless the user explicitly asks. When task-folder cleanup is authorized, finish the final render, comparison and audit first, then retain the final outputs and necessary reference/build inputs while removing superseded drafts, duplicate exports and temporary crops within that scope. Check script dependencies before deleting assets, preserve the user's original files and unrelated work, and verify the retained file list.
 
 ## Delivery
 
