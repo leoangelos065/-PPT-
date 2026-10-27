@@ -27,12 +27,19 @@ Use this when the user says “可编辑”, “一模一样”, “一比一”
 
 ## Reconstruction workflow
 
+### Default effort and review
+
+- Default to one editable build and one quick visual review in the target app, using its on-screen view or a screenshot. There is no required number of revision rounds. Batch known corrections; repeat a check only for a material mismatch or a user-requested refinement.
+- Full-slide PNG/PDF exports, comparison images and heatmaps are optional diagnostic artifacts. Generate them when the user asks or when a concrete unresolved problem needs that evidence. Do not export a full image after every edit or deliver preview images by default.
+- Keep review focused on readable text, faithful content, obvious font/weight differences, line breaks, alignment and overlap. Stop chasing minor antialiasing or one-to-two-pixel differences once they no longer materially affect the result. Preserve any stricter fidelity target explicitly requested by the user.
+- Reuse a valid prior visual check when a save only embeds fonts and verified visible text, typography and geometry are unchanged. Run the final structural audit once; repeat it only after a relevant artifact change or a failed check.
+
 1. Inspect the source at its native pixel dimensions. Match the slide ratio to the source unless the user requests a different format.
 2. Transcribe and manually verify all text. Preserve intentional line breaks; fix OCR errors before building.
 3. Build only the modules needed for the specific image. Use native objects for simple structure and independent image assets for complex visuals.
 4. Perform the font-matching procedure below before final typography. Do not apply a universal Chinese or Latin fallback to the entire slide.
 5. Avoid automatic wrapping for single-line labels. Widen the text box first, then tune font size and position. Use explicit line breaks only when the reference has them.
-6. Render the actual PPTX in the user's target presentation app (such as PowerPoint or WPS) when available. Compare the exported PNG with the source at matching scale; inspect the side-by-side and use overlays or heatmaps where useful. Iterate on typography, wrapping, and local text-removal artifacts first. A library preview does not establish the app's actual appearance.
+6. Review the actual PPTX in the user's target presentation app (such as PowerPoint or WPS) when available. Compare its visible result with the source at matching scale. Use an export or overlay only when requested or needed to diagnose a concrete mismatch. Correct material typography, wrapping or text-removal problems together, then check the affected regions. A library preview does not establish the app's actual appearance.
 7. Run the bundled `scripts/audit_pptx.py` before delivery. Inspect its component/font inventory and resolve reported structural issues; use actual-render visual checks for text overflow, wrapping, geometry, palette and damaged media. A structural pass alone is not visual acceptance.
 
 ### Refining an existing PPT against its source image
@@ -40,7 +47,7 @@ Use this when the user says “可编辑”, “一模一样”, “一比一”
 - Preserve the original image and a task-specific snapshot of the starting PPTX during refinement. When the user asks to reproduce or correct against the original image, that image governs both wording and appearance. Transcribe it directly; use the existing deck only as an editable starting point or asset donor. Reuse photographs or icons only after confirming they match the image. Preserve wording that the user explicitly requested to change, and record those intentional differences instead of silently adopting a prior deck's text.
 - Make a short, region-by-region discrepancy list before editing: font family and weight, line spacing and wrapping, card bounds and gaps, badges and check marks, colors, and stray formatting. Measure card edges before moving them; leave geometry that already aligns alone and make the smallest visible correction.
 - Inspect paragraph-level formatting as well as font runs. Check inherited bullets or numbering, hanging indents, paragraph and line spacing, trailing empty paragraphs, text highlight or shading, and placeholder/theme defaults. These can create visible mismatches even when the selected font is correct.
-- After each focused edit, render the PPTX again in the target app and compare the same regions. Finish with a labeled side-by-side image at the same scale, then run the structural audit. Report the visual result and audit result separately.
+- Batch related edits, then quickly check the affected regions in the target app. Add a labeled side-by-side export when the user requests it or a visual question remains unresolved; it is not required after every edit. Run the final structural audit and distinguish its result from the visual review.
 
 ## Match fonts and formatting
 
@@ -58,7 +65,7 @@ Use this when the user says “可编辑”, “一模一样”, “一比一”
 - Build a per-region calibration record for title spans, subtitle, headers, body paragraphs, captions, badges, and footer: visible glyph bounding box in source pixels, text baseline, gaps to neighboring objects, font size/weight, foreground RGB, fill RGB, and line spacing. Measure visible glyph extents rather than equating the text-box rectangle with the text itself. Convert pixels to points using the actual slide/export dimensions, and calibrate internal margins and vertical anchors explicitly.
 - A title may contain differently sized phrases. Match those phrases using separate editable runs or text boxes. Sample colors from solid stroke interiors and flat background interiors, avoiding antialiased edges, shadows, and JPEG noise; record estimates and visually check them. Font matching includes size, position, spacing, color, and partial bold, not only family names.
 - Verify PowerPoint's actual Font.Name, NameFarEast, and NameAscii (or equivalent) for representative Chinese, Latin, and mixed runs. Where a mixed text box needs different scripts, create intentional runs and document that selection may show multiple fonts. A correct East Asian typeface alone does not justify saying that the font-bar issue is fixed.
-- Export at the original image dimensions, inspect aligned overlays and enlarged regional comparisons, and revise the largest visible discrepancies. Record before/after regional results for glyph position, dimensions, spacing and colors. Do not accept a result based only on slide-wide similarity or a structural audit. If exact font identification remains uncertain, state that plainly.
+- When a detailed comparison is requested or necessary, export at the original image dimensions and inspect aligned overlays or enlarged regional crops. Revise the largest material discrepancies and record the relevant measurements. Do not accept a result based only on slide-wide similarity or a structural audit. If exact font identification remains uncertain, state that plainly.
 
 - Keep a component inventory mapping source regions to PPT objects and noting each representation. Inspect the actual PPTX hierarchy: verify that small components are separate objects, that grouped children remain accessible, and that no panel-sized raster hides editable structure.
 - Check an example from every component category by selecting/moving it independently in PowerPoint when available. Check text boxes for overflow and substitution using renderer measurements where possible, in addition to visual inspection.

@@ -12,7 +12,7 @@ Detect OS, Python, available presentation libraries, renderers and fonts. Keep b
 - If the user uses WPS and it is available, inspect and export the actual PPTX there. A LibreOffice preview with missing or substituted Chinese glyphs cannot validate WPS output. After external edits, close the stale task document without saving over the generated file, reopen the updated PPTX, and export again; preserve any concurrent user edits separately.
 - WPS may append a suffix to an export rather than overwrite an older PNG. Verify the export's path, modification time and contents before making a comparison; normalize the newest verified render to the final filename so a stale preview is not delivered.
 - With python-pptx/OOXML, explicit fills and lines may still inherit theme effects in WPS. When the reference has no shadow, suppress the shape's theme effect reference (`a:effectRef idx="0"`) and set an empty `a:effectLst` in its shape properties as needed. Apply this to native shapes and connectors, then verify the export; setting a fill alone does not clear inherited effects.
-- Export the reconstructed slide, align it to the original image dimensions, and inspect local glyph masks, icon shapes and full composite badges. Do not stretch the image or alter its aspect ratio merely to lower a metric.
+- Use the target app's on-screen view for the default quick review. When a detailed export is requested or necessary, align it to the original image dimensions and inspect only the relevant glyphs, icons or badges. Do not stretch the image or alter its aspect ratio merely to lower a metric, or repeat a full export after every small edit.
 
 ## Fonts
 
