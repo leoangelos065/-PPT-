@@ -35,6 +35,13 @@ Use this when the user says “可编辑”, “一模一样”, “一比一”
 6. Render the actual PPTX with PowerPoint when available, not just a library preview. Compare the exported PNG with the source and inspect the side-by-side and heatmap. Iterate on typography, wrapping, and local text-removal artifacts first.
 7. Run the bundled `scripts/audit_pptx.py` before delivery. Inspect its component/font inventory and resolve reported structural issues; use actual-render visual checks for text overflow, wrapping, geometry, palette and damaged media. A structural pass alone is not visual acceptance.
 
+### Refining an existing PPT against its source image
+
+- Preserve a task-specific copy of the starting PPTX and the original image. Render the current slide in the target presentation app, then compare at matching scale and alignment. Treat the image as the visual reference and the existing deck as the source of wording unless the user asks for text changes.
+- Make a short, region-by-region discrepancy list before editing: font family and weight, line spacing and wrapping, card bounds and gaps, badges and check marks, colors, and stray formatting. Measure card edges before moving them; leave geometry that already aligns alone and make the smallest visible correction.
+- Inspect paragraph-level formatting as well as font runs. Check inherited bullets or numbering, hanging indents, paragraph and line spacing, trailing empty paragraphs, text highlight or shading, and placeholder/theme defaults. These can create visible mismatches even when the selected font is correct.
+- After each focused edit, render the PPTX again in the target app and compare the same regions. Finish with a labeled side-by-side image at the same scale, then run the structural audit. Report the visual result and audit result separately.
+
 ## Match fonts and formatting
 
 - Inventory each text role and mixed-format span: family, real font weight, bold, italic, size, color, character spacing, line spacing, paragraph alignment, baseline, superscript/subscript, and explicit breaks. Preserve partially bold text using separate runs rather than bolding the whole sentence. Use matching East Asian and Latin faces per run when the reference requires it.
